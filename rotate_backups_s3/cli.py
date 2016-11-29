@@ -5,7 +5,7 @@
 # URL: https://github.com/xolox/python-rotate-backups
 
 """
-Usage: rotate-backups-s3 [OPTIONS] DIRECTORY..
+Usage: rotate-backups-s3 [OPTIONS] [s3://]bucket[/prefix]..
 
 Easy rotation of backups in an AWS S3 bucket based. To use
 this program you specify a rotation scheme via (a combination of) the --hourly,
@@ -169,7 +169,7 @@ def main():
         # If no arguments are given but the system has a configuration file
         # then the backups in the configured directories are rotated.
         if not arguments:
-            arguments.extend(bucket for bucket, _, _ in load_config_file(config_file))
+            arguments.extend(s3path for s3path, _, _ in load_config_file(config_file))
         # Show the usage message when no directories are given nor configured.
         if not arguments:
             usage(__doc__)
@@ -178,7 +178,15 @@ def main():
         logger.error("%s", e)
         sys.exit(1)
     # Rotate the backups in the given or configured directories.
-    for bucket in arguments:
+    for s3path in arguments:
+        prefix = ''
+        bucket = s3path[5:] if s3path.startswith('s3://') else s3path
+
+        pos = bucket.find('/')
+        if pos != -1:
+            prefix = bucket[pos:].strip('/')
+            bucket = bucket[:pos]
+
         S3RotateBackups(
             rotation_scheme=rotation_scheme,
             aws_access_key_id=aws_access_key_id,
@@ -186,7 +194,7 @@ def main():
             include_list=include_list,
             exclude_list=exclude_list,
             dry_run=dry_run,
-        ).rotate_backups(bucket)
+        ).rotate_backups(bucket, prefix)
 
 if __name__ == "__main__":
     main()

@@ -117,7 +117,7 @@ class S3RotateBackups(RotateBackups):
             include_list=include_list, exclude_list=exclude_list,
             dry_run=dry_run, config_file=config_file)
 
-    def rotate_backups(self, bucketname):
+    def rotate_backups(self, bucketname, prefix):
         """
         Rotate the backups in a bucket according to a flexible rotation scheme.
 
@@ -126,7 +126,7 @@ class S3RotateBackups(RotateBackups):
 
         bucket = self.conn.get_bucket(bucketname)
         # Collect the backups in the given directory.
-        sorted_backups = self.collect_backups(bucketname)
+        sorted_backups = self.collect_backups(bucketname, prefix)
         if not sorted_backups:
             logger.info("No backups found in %s.", bucketname)
             return
@@ -157,7 +157,7 @@ class S3RotateBackups(RotateBackups):
         if len(backups_to_preserve) == len(sorted_backups):
             logger.info("Nothing to do! (all backups preserved)")
 
-    def collect_backups(self, bucketname):
+    def collect_backups(self, bucketname, prefix):
         """
         Collect the backups in the given s3 bucket.
 
@@ -168,9 +168,10 @@ class S3RotateBackups(RotateBackups):
         backups = []
         
         bucket = self.conn.get_bucket(bucketname)
-        logger.info("Scanning bucket for backups: %s", bucketname)
-        
-        for entry in natsort([key.name for key in bucket.list()]):
+
+        logger.info("Scanning for backups: s3://%s/%s", bucketname, prefix)
+
+        for entry in natsort([key.name for key in bucket.list(prefix)]):
             # Check for a time stamp in the directory entry's name.
             match = TIMESTAMP_PATTERN.search(entry)
             if match:
