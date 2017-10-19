@@ -30,6 +30,7 @@ from natsort import natsort
 from six.moves import configparser
 
 import boto
+from boto.s3.connection import S3Connection
 from rotate_backups import Backup, RotateBackups, TIMESTAMP_PATTERN
 
 # Semi-standard module versioning.
@@ -111,7 +112,8 @@ class S3RotateBackups(RotateBackups):
         
         self.aws_access_key_id = aws_access_key_id
         self.aws_secret_access_key = aws_secret_access_key
-        self.conn = boto.connect_s3(aws_access_key_id, aws_secret_access_key)
+        # host must be set, boto.conf is not enough.
+        self.conn = S3Connection(aws_access_key_id, aws_secret_access_key, host='s3.amazonaws.com')
 
         super(S3RotateBackups, self).__init__(rotation_scheme,
             include_list=include_list, exclude_list=exclude_list,
