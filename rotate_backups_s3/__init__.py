@@ -34,7 +34,7 @@ from boto.s3.connection import S3Connection
 from rotate_backups import Backup, RotateBackups, TIMESTAMP_PATTERN
 
 # Semi-standard module versioning.
-__version__ = '0.3'
+__version__ = '0.4'
 
 # Initialize a logger for this module.
 logger = logging.getLogger(__name__)

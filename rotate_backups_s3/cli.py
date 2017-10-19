@@ -133,7 +133,7 @@ def main():
     # Parse the command line arguments.
     try:
         options, arguments = getopt.getopt(sys.argv[1:], 'U:P:H:d:w:m:y:I:x:c:nvh', [
-            'aws_access_key_id=', 'aws_secret_access_key=', 'aws_host=', 'hourly=', 'daily=',
+            'aws-access-key-id=', 'aws-secret-access-key=', 'aws-host=', 'hourly=', 'daily=',
             'weekly=', 'monthly=', 'yearly=', 'include=',
             'exclude=', 'config=', 'dry-run', 'verbose', 'help',
         ])
