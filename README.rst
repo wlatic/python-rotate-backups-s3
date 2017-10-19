@@ -81,6 +81,7 @@ Please use the ``--dry-run`` option to test the effect of the specified rotation
    "``-U``, ``--aws-access-key-id=xxxxxx``","Set the number of daily backups to preserve during rotation. Refer to the
    usage of the ``-H``, ``--hourly`` option for details."
    "``-P``, ``--aws-secret-access-key=xxxxxx``","AWS S3 secret key."
+   "``--aws-host=xxxxxx``","AWS S3 host default: s3.amazonaws.com. For central-1 region: s3-eu-central-1.amazonaws.com"
    "``-H``, ``--hourly=COUNT``","Set the number of hourly backups to preserve during rotation:
    
    - If ``COUNT`` is an integer it gives the number of hourly backups to preserve,

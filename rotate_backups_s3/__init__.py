@@ -72,6 +72,7 @@ class S3RotateBackups(RotateBackups):
     """Python API for the ``rotate-backups-s3`` program."""
 
     def __init__(self, rotation_scheme, aws_access_key_id, aws_secret_access_key,
+                 aws_host,
                  include_list=None, exclude_list=None, dry_run=False,
                  config_file=None):
         """
@@ -112,8 +113,9 @@ class S3RotateBackups(RotateBackups):
         
         self.aws_access_key_id = aws_access_key_id
         self.aws_secret_access_key = aws_secret_access_key
+        self.aws_host = aws_host
         # host must be set, boto.conf is not enough.
-        self.conn = S3Connection(aws_access_key_id, aws_secret_access_key, host='s3.amazonaws.com')
+        self.conn = S3Connection(aws_access_key_id, aws_secret_access_key, host=aws_host)
 
         super(S3RotateBackups, self).__init__(rotation_scheme,
             include_list=include_list, exclude_list=exclude_list,

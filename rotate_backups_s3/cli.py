@@ -33,6 +33,10 @@ Supported options:
     
     AWS S3 secret key
 
+  --aws-host
+    
+    AWS S3 host
+
   -H, --hourly=COUNT
 
     Set the number of hourly backups to preserve during rotation:
@@ -120,6 +124,7 @@ def main():
     # Command line option defaults.
     aws_access_key_id = None
     aws_secret_access_key = None
+    aws_host = 's3.amazonaws.com'
     config_file = None
     dry_run = False
     exclude_list = []
@@ -128,7 +133,7 @@ def main():
     # Parse the command line arguments.
     try:
         options, arguments = getopt.getopt(sys.argv[1:], 'U:P:H:d:w:m:y:I:x:c:nvh', [
-            'aws_access_key_id=', 'aws_secret_access_key=', 'hourly=', 'daily=',
+            'aws_access_key_id=', 'aws_secret_access_key=', 'aws_host=', 'hourly=', 'daily=',
             'weekly=', 'monthly=', 'yearly=', 'include=',
             'exclude=', 'config=', 'dry-run', 'verbose', 'help',
         ])
@@ -153,6 +158,8 @@ def main():
                 aws_access_key_id = value
             elif option in ('-P', '--aws-secret-access-key'):
                 aws_secret_access_key = value
+            elif option in ('--aws-host'):
+                aws_host = value
             elif option in ('-n', '--dry-run'):
                 logger.info("Performing a dry run (because of %s option) ..", option)
                 dry_run = True
@@ -191,6 +198,7 @@ def main():
             rotation_scheme=rotation_scheme,
             aws_access_key_id=aws_access_key_id,
             aws_secret_access_key=aws_secret_access_key,
+            aws_host=aws_host,
             include_list=include_list,
             exclude_list=exclude_list,
             dry_run=dry_run,
