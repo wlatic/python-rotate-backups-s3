@@ -130,12 +130,13 @@ def main():
     exclude_list = []
     include_list = []
     rotation_scheme = {}
+    prefer_recent = False
     # Parse the command line arguments.
     try:
-        options, arguments = getopt.getopt(sys.argv[1:], 'U:P:H:d:w:m:y:I:x:c:nvh', [
+        options, arguments = getopt.getopt(sys.argv[1:], 'U:P:H:d:w:m:y:I:x:c:nvhp', [
             'aws-access-key-id=', 'aws-secret-access-key=', 'aws-host=', 'hourly=', 'daily=',
             'weekly=', 'monthly=', 'yearly=', 'include=',
-            'exclude=', 'config=', 'dry-run', 'verbose', 'help',
+            'exclude=', 'config=', 'dry-run', 'verbose', 'help', 'prefer-recent',
         ])
         for option, value in options:
             if option in ('-H', '--hourly'):
@@ -163,6 +164,8 @@ def main():
             elif option in ('-n', '--dry-run'):
                 logger.info("Performing a dry run (because of %s option) ..", option)
                 dry_run = True
+            elif option in ('-p', '--prefer-recent'):
+                prefer_recent = True
             elif option in ('-v', '--verbose'):
                 coloredlogs.increase_verbosity()
             elif option in ('-h', '--help'):
@@ -202,6 +205,7 @@ def main():
             include_list=include_list,
             exclude_list=exclude_list,
             dry_run=dry_run,
+            prefer_recent=prefer_recent,
         ).rotate_backups(bucket, prefix)
 
 if __name__ == "__main__":

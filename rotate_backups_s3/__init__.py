@@ -74,7 +74,7 @@ class S3RotateBackups(RotateBackups):
     def __init__(self, rotation_scheme, aws_access_key_id, aws_secret_access_key,
                  aws_host,
                  include_list=None, exclude_list=None, dry_run=False,
-                 config_file=None):
+                 config_file=None, prefer_recent=False):
         """
         Construct a :class:`S3RotateBackups` object.
 
@@ -119,7 +119,7 @@ class S3RotateBackups(RotateBackups):
 
         super(S3RotateBackups, self).__init__(rotation_scheme,
             include_list=include_list, exclude_list=exclude_list,
-            dry_run=dry_run, config_file=config_file)
+            dry_run=dry_run, config_file=config_file, prefer_recent=prefer_recent)
 
     def rotate_backups(self, bucketname, prefix):
         """
