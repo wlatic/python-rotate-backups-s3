@@ -31,7 +31,7 @@ from six.moves import configparser
 
 import boto
 from boto.s3.connection import S3Connection
-from rotate_backups import Backup, RotateBackups, TIMESTAMP_PATTERN
+from rotate_backups import Backup, RotateBackups
 
 # Semi-standard module versioning.
 __version__ = '0.4'
@@ -177,6 +177,7 @@ class S3RotateBackups(RotateBackups):
 
         for entry in natsort([key.name for key in bucket.list(prefix)]):
             # Check for a time stamp in the directory entry's name.
+            TIMESTAMP_PATTERN = re.compile(r'_(?P<year>\d{4})(?P<month>\d{2})(?P<day>\d{2})-', re.VERBOSE)
             match = TIMESTAMP_PATTERN.search(entry)
             if match:
                 # Make sure the entry matches the given include/exclude patterns.
